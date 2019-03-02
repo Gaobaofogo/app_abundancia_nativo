@@ -9,7 +9,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import gql from 'graphql-tag'
 
 const httpLink = createHttpLink({
-  uri: 'https://immense-wave-53840.herokuapp.com/graphql'
+  uri: 'https://immense-wave-53840.herokuapp.com/graphql/'
 });
 
 const client = new ApolloClient({
