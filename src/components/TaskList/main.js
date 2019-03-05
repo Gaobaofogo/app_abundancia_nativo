@@ -5,9 +5,7 @@ import gql from 'graphql-tag';
 
 import { View, Text, Button, StyleSheet } from 'react-native';
 
-import Task from '../Task/main';
-
-import LocalStorage from '../../DBInterface/LocalStorage';
+import TaskExibition from '../TaskExibition/main';
 
 const QUERY = gql`
 {
@@ -25,6 +23,8 @@ class TaskList extends React.Component{
     this.state = {
       userName: '',
     };
+
+    this.selectTask = this.selectTask.bind(this);
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -33,18 +33,32 @@ class TaskList extends React.Component{
     }
   };
 
+  selectTask(id, title) {
+    const { navigate } = this.props.navigation;
+
+    navigate('TaskDescription', { taskId: id, title });
+  }
+
   render() {
     return (
       <Query query={QUERY}>
         {({ loading, error, data }) => {
           if (loading) return (<View><Text>Fetching</Text></View>);
           if (error) return (<View><Text>Error</Text></View>);
-    
+
           const tasksToRender = data.tasks;
-    
+
           return (
             <View style={styles.container}>
-              {tasksToRender.map(task => <Task title={task.title} key={task.id} />)}
+              {tasksToRender.map(task =>
+                (
+                  <TaskExibition
+                    title={task.title}
+                    key={task.id}
+                    changePage={() => this.selectTask(task.id, task.title)}
+                  />
+                )
+              )}
             </View>
           )
         }}
