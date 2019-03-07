@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Query } from 'react-apollo'
+import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import { View, Text, ScrollView } from 'react-native';
