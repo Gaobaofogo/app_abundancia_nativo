@@ -2,7 +2,6 @@ import React from 'react';
 
 import { View, Text } from 'react-native';
 
-import LocalStorage from '../../DBInterface/LocalStorage';
 
 class Initialization extends React.Component {
   constructor() {
@@ -11,14 +10,8 @@ class Initialization extends React.Component {
     this.init();
   }
 
-  async init() {
-    try {
-      const userName = await LocalStorage.getUserName();
-
-      this.props.navigation.navigate(userName ? 'Tasks' : 'Compliance');
-    } catch (err) {
-      throw err;
-    }
+  init() {
+    this.props.navigation.navigate(userName ? 'Tasks' : 'Compliance');
   }
 
   render() {
