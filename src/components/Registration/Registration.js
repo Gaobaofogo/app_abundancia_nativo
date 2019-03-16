@@ -1,27 +1,13 @@
 import React, { Component, Fragment } from 'react';
-import { View, Text, Button, TextInput, Alert } from 'react-native';
-import { ApolloConsumer } from 'react-apollo';
+import { View, Text, Button, TextInput } from 'react-native';
 
 import { Mutation } from 'react-apollo';
 
 import gql from 'graphql-tag';
 
-import deviceStorage from '../../services/deviceStorage';
-
-
 const POST_MUTATION = gql`
-  mutation Register($username: String!, $password: String!) {
-    createUser(username: $username, password: $password) {
-      tokenAuth(username: $username, password: $password) {
-        token
-      }
-    }
-  }
-`;
-
-const testPost = gql`
-  mutation Register($username: String!, $password: String!){
-    createUser(username: $username, password: $password) {
+  mutation {
+    createUser($username: !String, $password: !String) {
       user {
         id
         username
@@ -38,29 +24,28 @@ class Registration extends React.Component {
       username: '',
       password: ''
     };
+
+    this.registerUser = this.registerUser.bind(this);
   }
 
-  static navigationOptions = {
-    title: 'Cadastro'
-  };
+  registerUser() {
+    const { username, password } = this.state;
+  }
 
   render() {
+    const { username, password } = this.state;
+
     return (
         <View>
           <TextInput onChangeText={username => this.setState({ username })} />
           <TextInput onChangeText={password => this.setState({ password })} />
-
-          <Mutation
-          mutation={testPost}
-          variables={{ username: this.state.username, password: this.state.password }}
-          update={(store, { data }) => {
-            Alert.alert('Resultado do servidor', data.createUser.user['username']);
-          }}>
+          <Mutation mutation={POST_MUTATION} variables={{ username, password }}>
             {postMutation => (
               <Button
-                onPress={postMutation}
-                title="Cadastrar"
-                color="black"/>
+                onClick={postMutation}
+                title='Cadastrar'
+                color='black'
+              />
             )}
           </Mutation>
         </View>
