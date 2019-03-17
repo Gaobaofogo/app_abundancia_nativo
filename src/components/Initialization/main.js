@@ -1,23 +1,33 @@
 import React from 'react';
 
-import { View, Text } from 'react-native';
+import { View, Text, ActivityIndicator, StatusBar, Alert, AsyncStorage } from 'react-native';
 
 
 class Initialization extends React.Component {
-  constructor() {
-    super();
-
-    this.init();
+  constructor(props) {
+    super(props);
+    this._bootstrapAsync();
   }
 
-  init() {
-    this.props.navigation.navigate(userName ? 'Tasks' : 'Compliance');
+  _bootstrapAsync = async () => {
+    try {
+      const token = JSON.stringify(await AsyncStorage.getItem('id_token'));
+
+      if (token === 'null') {
+        this.props.navigation.navigate('LoginRegistration');
+      } else {
+        this.props.navigation.navigate('Tasks');
+      }
+    } catch (err) {
+      throw err;
+    }
   }
 
   render() {
     return (
       <View>
-        <Text>Olá mundo</Text>
+        <ActivityIndicator />
+        <StatusBar barStyle="default"/>
       </View>
     );
   }

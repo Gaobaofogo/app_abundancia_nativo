@@ -3,7 +3,7 @@ import { createStackNavigator, createAppContainer, createSwitchNavigator } from 
 import TaskList from './components/TaskList/main';
 import TaskDescription from './components/TaskDescription/main';
 import Initialization from './components/Initialization/main';
-import Login from './components/Login/main';
+import Login from './components/Login/Login';
 import Registration from './components/Registration/Registration';
 
 const LoginRegistrationStack = createStackNavigator(
@@ -29,8 +29,8 @@ const InitializationStack = createStackNavigator(
 
 export default createAppContainer(createSwitchNavigator(
   {
-    LoginRegistration: LoginRegistrationStack,
     Initialization: InitializationStack,
+    LoginRegistration: LoginRegistrationStack,
     Tasks: TaksStack
   }
 ));

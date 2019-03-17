@@ -3,9 +3,12 @@ import React from 'react';
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag';
 
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, ActivityIndicator, StatusBar, Alert, AsyncStorage } from 'react-native';
+import { Icon } from 'react-native-elements';
 
 import TaskExibition from '../TaskExibition/main';
+
+import deviceStorage from '../../services/deviceStorage';
 
 const QUERY = gql`
 {
@@ -13,6 +16,7 @@ const QUERY = gql`
     id
     title
   }
+  
 }
 `;
 
@@ -29,7 +33,21 @@ class TaskList extends React.Component{
 
   static navigationOptions = ({ navigation }) => {
     return {
-      title: 'Bem vindo aos 21 dias'
+      title: 'Bem vindo aos 21 dias',
+      headerRight: (
+        <Icon
+          raised
+          name='sign-out'
+          type='font-awesome'
+          onPress={async () => {
+            try {
+              await AsyncStorage.removeItem('id_token');
+              navigation.navigate('LoginRegistration')
+            } catch (err) {
+              Alert.alert('Erro no logout', err);
+            }
+          }}/>
+      )
     }
   };
 
@@ -43,8 +61,15 @@ class TaskList extends React.Component{
     return (
       <Query query={QUERY}>
         {({ loading, error, data }) => {
-          if (loading) return (<View><Text>Fetching</Text></View>);
-          if (error) return (<View><Text>Error</Text></View>);
+          if (loading) return (
+            <View style={styles.container}>
+              <ActivityIndicator size="large" color="#0000ff" />
+              <StatusBar barStyle="default"/>
+            </View>
+          );
+          if (error) {
+            return (<View><Text>Error - {JSON.stringify(error)}</Text></View>);
+          }
 
           const tasksToRender = data.tasks;
 
